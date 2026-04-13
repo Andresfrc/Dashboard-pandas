@@ -6,34 +6,15 @@ import pandas as pd
 
 
 def conectar():
-    db_url = (
-        os.getenv("DATABASE_URL")
-        or os.getenv("MYSQL_URL")
-        or os.getenv("MYSQLDATABASE_URL")
-    )
-    if db_url:
-        parsed = urlparse(db_url)
-        host = parsed.hostname
-        user = parsed.username
-        password = parsed.password
-        database = parsed.path.lstrip("/")
-        port = parsed.port or 3306
-    else:
-        host = os.getenv("MYSQLHOST") or os.getenv("DB_HOST") or "localhost"
-        user = os.getenv("MYSQLUSER") or os.getenv("DB_USER") or "root"
-        password = os.getenv("MYSQLPASSWORD") or os.getenv("DB_PASSWORD") or ""
-        database = os.getenv("MYSQLDATABASE") or os.getenv("DB_NAME") or "bd_tablero"
-        port = int(os.getenv("MYSQLPORT") or os.getenv("DB_PORT") or "3306")
-
-    conexion = mysql.connector.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database,
-        port=port,
+    return mysql.connector.connect(
+        host=os.getenv("MYSQLHOST"),
+        port=int(os.getenv("MYSQLPORT",)),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE")
+        
     )
     return conexion
-
 
 def obtener_usuarios(nombre=None):
     conexion = conectar()
