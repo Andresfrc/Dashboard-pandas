@@ -1,0 +1,6 @@
+Flask
+dash
+pandas
+plotly
+mysql-connector-python
+gunicorn

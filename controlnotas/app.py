@@ -1,4 +1,5 @@
-from turtle import pd
+import os
+import unicodedata
 
 from flask import Flask, redirect, render_template, request, session
 import pandas
@@ -8,10 +9,10 @@ from database import conectar
 from database import insertar_estudiante
 from pandas import isna
 
-pd=pandas
+pd = pandas
 
 server = Flask(__name__)
-server.secret_key = "190305"
+server.secret_key = os.getenv("SECRET_KEY", "190305")
 
 
 @server.after_request
@@ -27,13 +28,11 @@ def add_header(response):
 def quitar_acentos(texto):
     if pd.isna(texto):
         return texto 
-    
-    
-        texto=str(texto)
-        return ''.join(
-            c for c in unicodedata.normalize('NFD', texto)
-            if unicodedata.category(c) != 'Mn'
-        )
+    texto = str(texto)
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', texto)
+        if unicodedata.category(c) != 'Mn'
+    )
 
 
 @server.route("/", methods=["GET", "POST"])
@@ -113,4 +112,5 @@ creartablero(server)
 
 
 if __name__ == "__main__":
-    server.run(debug=True)
+    port = int(os.getenv("PORT", "5000"))
+    server.run(host="0.0.0.0", port=port, debug=True)
